@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shop_app/providers/cart.dart';
 
 import '../widgets/products_grid.dart';
+import '../screens/cart_screen.dart';
 import '../widgets/badge.dart';
 
 class ProductOverviewScreen extends StatefulWidget {
@@ -56,7 +57,9 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
               icon: Icon(
                 Icons.shopping_cart,
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, CartScreem.routeName);
+              },
             ),
           )
         ],
