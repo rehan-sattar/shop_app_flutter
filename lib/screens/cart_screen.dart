@@ -28,7 +28,7 @@ class CartScreem extends StatelessWidget {
                   Spacer(),
                   Chip(
                     label: Text(
-                      '\$${cart.getTotalAmount}',
+                      '\$${cart.getTotalAmount.toStringAsFixed(2)}',
                       style: TextStyle(
                         color: Colors.white,
                       ),
