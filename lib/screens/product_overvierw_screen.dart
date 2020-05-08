@@ -5,6 +5,7 @@ import 'package:shop_app/providers/cart.dart';
 import '../widgets/products_grid.dart';
 import '../screens/cart_screen.dart';
 import '../widgets/badge.dart';
+import '../widgets/app_drawer.dart';
 
 class ProductOverviewScreen extends StatefulWidget {
   @override
@@ -64,6 +65,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
           )
         ],
       ),
+      drawer: AppDrawer(),
       body: ProductsGrid(_isFavoriteChecked),
     );
   }

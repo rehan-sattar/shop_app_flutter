@@ -9,7 +9,7 @@ class CartScreem extends StatelessWidget {
   static String routeName = '/cart-screen';
   @override
   Widget build(BuildContext context) {
-    final cart = Provider.of<Cart>(context, listen: false);
+    final cart = Provider.of<Cart>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Your Cart'),

@@ -35,4 +35,8 @@ class Orders with ChangeNotifier {
     );
     notifyListeners();
   }
+
+  int get getOrdersCount {
+    return _orders.length;
+  }
 }
