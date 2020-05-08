@@ -27,6 +27,13 @@ class AppDrawer extends StatelessWidget {
               onTap: () {
                 Navigator.pushReplacementNamed(context, "/orders");
               },
+            ),
+            ListTile(
+              leading: Icon(Icons.shopping_basket),
+              title: Text('Your Products'),
+              onTap: () {
+                Navigator.pushReplacementNamed(context, "/userProducts");
+              },
             )
           ],
         ),
