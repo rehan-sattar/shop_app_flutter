@@ -28,6 +28,30 @@ class CartItem extends StatelessWidget {
         ),
       ),
       direction: DismissDirection.endToStart,
+      confirmDismiss: (direction) {
+        /// This `confirmDismiss` should always expect a return value as `Future` of `true` or `false`.
+        /// `showDialog` returns a `Future`, therefore we are returning it.
+        return showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text('Do you really want to delete this item? '),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('No'),
+                onPressed: () {
+                  Navigator.of(ctx).pop(false);
+                },
+              ),
+              FlatButton(
+                child: Text('Yes'),
+                onPressed: () {
+                  Navigator.of(ctx).pop(true);
+                },
+              )
+            ],
+          ),
+        );
+      },
       onDismissed: (direction) {
         Provider.of<Cart>(context, listen: false).removeItemFromCart(productId);
       },
