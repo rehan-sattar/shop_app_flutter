@@ -52,8 +52,15 @@ class Products extends ChangeNotifier {
     return items.where((item) => item.isFavorite).toList();
   }
 
-  void addProduct() {
-    // _items.add()
+  void addProduct(Product newProduct) {
+    var _newProduct = new Product(
+      id: DateTime.now().toString(),
+      title: newProduct.title,
+      description: newProduct.description,
+      price: newProduct.price,
+      imageUrl: newProduct.imageUrl,
+    );
+    _items.add(_newProduct);
     notifyListeners();
   }
 }
