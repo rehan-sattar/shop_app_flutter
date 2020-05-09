@@ -73,4 +73,9 @@ class Products extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  void deleteProduct(String productId) {
+    _items.removeWhere((element) => element.id == productId);
+    notifyListeners();
+  }
 }
