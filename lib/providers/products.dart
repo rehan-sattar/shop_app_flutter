@@ -63,4 +63,14 @@ class Products extends ChangeNotifier {
     _items.add(_newProduct);
     notifyListeners();
   }
+
+  void editProduct(String productId, Product updatedProduct) {
+    var index = _items.indexWhere((element) => element.id == productId);
+    if (index >= 0) {
+      _items[index] = updatedProduct;
+    } else {
+      print('...');
+    }
+    notifyListeners();
+  }
 }
