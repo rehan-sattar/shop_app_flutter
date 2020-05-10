@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/providers/cart.dart';
+import 'package:shop_app/providers/products.dart';
 
 import '../widgets/products_grid.dart';
 import '../screens/cart_screen.dart';
@@ -16,6 +17,13 @@ enum FilterOptions { Favorites, All }
 
 class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   var _isFavoriteChecked = false;
+  var _isInit = true;
+
+  @override
+  void didChangeDependencies() {
+    Provider.of<Products>(context).getAndSetAllProducts();
+    super.didChangeDependencies();
+  }
 
   void handleSelectedChange(FilterOptions selectedValue) {
     setState(() {
