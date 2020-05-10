@@ -96,7 +96,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit your product'),
+        title: Text(
+          _editedProduct.id != null ? 'Edit your product' : 'Add new product',
+        ),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.save),
