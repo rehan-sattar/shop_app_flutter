@@ -81,7 +81,10 @@ class Products extends ChangeNotifier {
         _items.add(_newProduct);
         notifyListeners();
       },
-    );
+    ).catchError((error) {
+      print(error);
+      throw error;
+    });
   }
 
   void editProduct(String productId, Product updatedProduct) {
