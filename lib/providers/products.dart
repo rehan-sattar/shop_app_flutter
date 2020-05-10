@@ -1,4 +1,6 @@
 import 'package:flutter/foundation.dart';
+import "dart:convert";
+import 'package:http/http.dart' as http;
 
 import './product.dart';
 
@@ -52,16 +54,34 @@ class Products extends ChangeNotifier {
     return items.where((item) => item.isFavorite).toList();
   }
 
-  void addProduct(Product newProduct) {
-    var _newProduct = new Product(
-      id: DateTime.now().toString(),
-      title: newProduct.title,
-      description: newProduct.description,
-      price: newProduct.price,
-      imageUrl: newProduct.imageUrl,
+  Future<void> addProduct(Product newProduct) {
+    var addNewProductEndPoint =
+        'https://shopapp-dcc1c.firebaseio.com/products.json';
+    return http
+        .post(
+      addNewProductEndPoint,
+      body: json.encode(
+        {
+          'title': newProduct.title,
+          'description': newProduct.description,
+          'price': newProduct.price,
+          'imageUrl': newProduct.imageUrl
+        },
+      ),
+    )
+        .then(
+      (value) {
+        var _newProduct = new Product(
+          id: DateTime.now().toString(),
+          title: newProduct.title,
+          description: newProduct.description,
+          price: newProduct.price,
+          imageUrl: newProduct.imageUrl,
+        );
+        _items.add(_newProduct);
+        notifyListeners();
+      },
     );
-    _items.add(_newProduct);
-    notifyListeners();
   }
 
   void editProduct(String productId, Product updatedProduct) {
