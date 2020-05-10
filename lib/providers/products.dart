@@ -54,37 +54,35 @@ class Products extends ChangeNotifier {
     return items.where((item) => item.isFavorite).toList();
   }
 
-  Future<void> addProduct(Product newProduct) {
+  Future<void> addProduct(Product newProduct) async {
     var addNewProductEndPoint =
         'https://shopapp-dcc1c.firebaseio.com/products.json';
-    return http
-        .post(
-      addNewProductEndPoint,
-      body: json.encode(
-        {
-          'title': newProduct.title,
-          'description': newProduct.description,
-          'price': newProduct.price,
-          'imageUrl': newProduct.imageUrl
-        },
-      ),
-    )
-        .then(
-      (value) {
-        var _newProduct = new Product(
-          id: DateTime.now().toString(),
-          title: newProduct.title,
-          description: newProduct.description,
-          price: newProduct.price,
-          imageUrl: newProduct.imageUrl,
-        );
-        _items.add(_newProduct);
-        notifyListeners();
-      },
-    ).catchError((error) {
-      print(error);
-      throw error;
-    });
+
+    try {
+      final response = await http.post(
+        addNewProductEndPoint,
+        body: json.encode(
+          {
+            'title': newProduct.title,
+            'description': newProduct.description,
+            'price': newProduct.price,
+            'imageUrl': newProduct.imageUrl
+          },
+        ),
+      );
+      var _newProduct = new Product(
+        id: json.decode(response.body)["name"],
+        title: newProduct.title,
+        description: newProduct.description,
+        price: newProduct.price,
+        imageUrl: newProduct.imageUrl,
+      );
+      _items.add(_newProduct);
+      notifyListeners();
+    } catch (error) {
+      // print(error);
+      // throw error;
+    }
   }
 
   void editProduct(String productId, Product updatedProduct) {
