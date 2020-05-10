@@ -21,7 +21,11 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
 
   @override
   void didChangeDependencies() {
-    Provider.of<Products>(context).getAndSetAllProducts();
+    if (_isInit) {
+      Provider.of<Products>(context).getAndSetAllProducts();
+    }
+
+    _isInit = false;
     super.didChangeDependencies();
   }
 

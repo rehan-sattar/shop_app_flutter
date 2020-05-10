@@ -38,7 +38,6 @@ class Products extends ChangeNotifier {
           imageUrl: prodData["imageUrl"],
         ));
       });
-
       _items = loadedProducts;
       notifyListeners();
     } catch (err) {
