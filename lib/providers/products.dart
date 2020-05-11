@@ -37,11 +37,13 @@ class Products extends ChangeNotifier {
           description: prodData["description"],
           price: prodData['price'],
           imageUrl: prodData["imageUrl"],
+          isFavorite: prodData["isFavorite"],
         ));
       });
       _items = loadedProducts;
       notifyListeners();
     } catch (err) {
+      print(err);
       throw (err);
     }
   }

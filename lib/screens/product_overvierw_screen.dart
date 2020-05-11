@@ -18,13 +18,20 @@ enum FilterOptions { Favorites, All }
 class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   var _isFavoriteChecked = false;
   var _isInit = true;
+  var _isLoading = false;
 
   @override
   void didChangeDependencies() {
     if (_isInit) {
-      Provider.of<Products>(context).getAndSetAllProducts();
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<Products>(context).getAndSetAllProducts().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
     }
-
     _isInit = false;
     super.didChangeDependencies();
   }
@@ -78,7 +85,11 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
         ],
       ),
       drawer: AppDrawer(),
-      body: ProductsGrid(_isFavoriteChecked),
+      body: _isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : ProductsGrid(_isFavoriteChecked),
     );
   }
 }

@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
+import 'package:shop_app/model/http_exception.dart';
 
 class Product with ChangeNotifier {
   final String id;
@@ -17,8 +21,30 @@ class Product with ChangeNotifier {
     this.isFavorite = false,
   });
 
-  void toggleIsFavorite() {
-    this.isFavorite = !this.isFavorite;
+  void _updateStatus(bool status) {
+    isFavorite = status;
     notifyListeners();
+  }
+
+  Future<void> toggleIsFavorite() async {
+    final previousStatus = isFavorite;
+    isFavorite = !isFavorite;
+    notifyListeners();
+    final url = 'https://shopapp-dcc1c.firebaseio.com/products/$id.json';
+    try {
+      final response = await http.patch(
+        url,
+        body: json.encode(
+          {'isFavorite': this.isFavorite},
+        ),
+      );
+      if (response.statusCode >= 400) {
+        _updateStatus(previousStatus);
+        throw HttpException('Oops! Can\'t mark this as favorite!');
+      }
+    } catch (e) {
+      _updateStatus(previousStatus);
+      throw HttpException(e.toString());
+    }
   }
 }
