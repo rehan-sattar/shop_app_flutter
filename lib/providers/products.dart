@@ -76,9 +76,22 @@ class Products extends ChangeNotifier {
     }
   }
 
-  void editProduct(String productId, Product updatedProduct) {
+  Future<void> editProduct(String productId, Product updatedProduct) async {
     var index = _items.indexWhere((element) => element.id == productId);
+    final editProductUrl =
+        'https://shopapp-dcc1c.firebaseio.com/products/$productId.json';
     if (index >= 0) {
+      await http.patch(
+        editProductUrl,
+        body: json.encode(
+          {
+            'title': updatedProduct.title,
+            'description': updatedProduct.description,
+            'price': updatedProduct.price,
+            'imageUrl': updatedProduct.imageUrl,
+          },
+        ),
+      );
       _items[index] = updatedProduct;
     } else {
       print('...');
