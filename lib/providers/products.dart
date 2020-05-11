@@ -3,6 +3,7 @@ import "dart:convert";
 import 'package:http/http.dart' as http;
 
 import './product.dart';
+import '../model/http_exception.dart';
 
 class Products extends ChangeNotifier {
   List<Product> _items = [];
@@ -99,8 +100,21 @@ class Products extends ChangeNotifier {
     notifyListeners();
   }
 
-  void deleteProduct(String productId) {
-    _items.removeWhere((element) => element.id == productId);
+  Future<void> deleteProduct(String productId) async {
+    final deleteProductUrl =
+        'https://shopapp-dcc1c.firebaseio.com/products/$productId.json';
+    final productIndex = _items.indexWhere(
+      (element) => element.id == productId,
+    );
+    var clonedProduct = _items[productIndex];
+    _items.removeAt(productIndex);
     notifyListeners();
+    final response = await http.delete(deleteProductUrl);
+    if (response.statusCode >= 400) {
+      _items.insert(productIndex, clonedProduct);
+      notifyListeners();
+      throw HttpException('Could not delete the product');
+    }
+    clonedProduct = null;
   }
 }
