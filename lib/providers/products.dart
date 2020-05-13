@@ -11,7 +11,8 @@ class Products extends ChangeNotifier {
   var showFavorites = false;
 
   final String token;
-  Products(this.token, this._items);
+  final String userId;
+  Products(this.token, this.userId, this._items);
 
   Product findById(String id) {
     return _items.firstWhere((prod) => prod.id == id);
@@ -26,15 +27,18 @@ class Products extends ChangeNotifier {
   }
 
   Future<void> getAndSetAllProducts() async {
-    var productsNodeEndPoint =
-        'https://shopapp-dcc1c.firebaseio.com/products.json?auth=$token';
+    var url = 'https://shopapp-dcc1c.firebaseio.com/products.json?auth=$token';
 
     try {
-      final response = await http.get(productsNodeEndPoint);
+      final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       if (extractedData == null) {
         return;
       }
+      url =
+          'https://shopapp-dcc1c.firebaseio.com/userFavorites/$userId.json?auth=$token';
+      final favoriteResponse = await http.get(url);
+      final favorites = json.decode(favoriteResponse.body);
       final List<Product> loadedProducts = [];
       extractedData.forEach((prodId, prodData) {
         loadedProducts.add(Product(
@@ -43,7 +47,7 @@ class Products extends ChangeNotifier {
           description: prodData["description"],
           price: prodData['price'],
           imageUrl: prodData["imageUrl"],
-          isFavorite: prodData["isFavorite"],
+          isFavorite: favorites != null ? favorites[prodId] ?? false : false,
         ));
       });
       _items = loadedProducts;
@@ -66,7 +70,7 @@ class Products extends ChangeNotifier {
             'title': newProduct.title,
             'description': newProduct.description,
             'price': newProduct.price,
-            'imageUrl': newProduct.imageUrl
+            'imageUrl': newProduct.imageUrl,
           },
         ),
       );

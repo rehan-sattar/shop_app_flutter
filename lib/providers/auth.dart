@@ -22,6 +22,10 @@ class Auth with ChangeNotifier {
     return null;
   }
 
+  String get getUserId {
+    return _userId;
+  }
+
   Future<void> _authenticate(
     String email,
     String password,
