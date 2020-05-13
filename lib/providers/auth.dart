@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import '../model/http_exception.dart';
+
 class Auth with ChangeNotifier {
   String _token;
   DateTime _expriryTime;
@@ -25,25 +27,20 @@ class Auth with ChangeNotifier {
           },
         ),
       );
-      print(json.decode(response.body));
+      var responseData = json.decode(response.body);
+      if (responseData['error'] != null) {
+        throw HttpException(responseData['error']['message']);
+      }
     } catch (err) {
       throw (err);
     }
   }
 
   Future<void> signUp(String email, String password) async {
-    try {
-      return _authenticate(email, password, 'signUp');
-    } catch (err) {
-      throw (err);
-    }
+    return _authenticate(email, password, 'signUp');
   }
 
   Future<void> signIn(String email, String password) async {
-    try {
-      return _authenticate(email, password, 'signInWithPassword');
-    } catch (err) {
-      throw (err);
-    }
+    return _authenticate(email, password, 'signInWithPassword');
   }
 }
