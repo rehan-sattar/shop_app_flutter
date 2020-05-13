@@ -10,6 +10,9 @@ class Products extends ChangeNotifier {
 
   var showFavorites = false;
 
+  final String token;
+  Products(this.token, this._items);
+
   Product findById(String id) {
     return _items.firstWhere((prod) => prod.id == id);
   }
@@ -24,7 +27,7 @@ class Products extends ChangeNotifier {
 
   Future<void> getAndSetAllProducts() async {
     var productsNodeEndPoint =
-        'https://shopapp-dcc1c.firebaseio.com/products.json';
+        'https://shopapp-dcc1c.firebaseio.com/products.json?auth=$token';
 
     try {
       final response = await http.get(productsNodeEndPoint);
@@ -53,7 +56,7 @@ class Products extends ChangeNotifier {
 
   Future<void> addProduct(Product newProduct) async {
     var productsNodeEndPoint =
-        'https://shopapp-dcc1c.firebaseio.com/products.json';
+        'https://shopapp-dcc1c.firebaseio.com/products.json?auth=$token';
 
     try {
       final response = await http.post(
@@ -85,7 +88,7 @@ class Products extends ChangeNotifier {
   Future<void> editProduct(String productId, Product updatedProduct) async {
     var index = _items.indexWhere((element) => element.id == productId);
     final editProductUrl =
-        'https://shopapp-dcc1c.firebaseio.com/products/$productId.json';
+        'https://shopapp-dcc1c.firebaseio.com/products/$productId.json?auth=$token';
     if (index >= 0) {
       await http.patch(
         editProductUrl,
@@ -107,7 +110,7 @@ class Products extends ChangeNotifier {
 
   Future<void> deleteProduct(String productId) async {
     final deleteProductUrl =
-        'https://shopapp-dcc1c.firebaseio.com/products/$productId.json';
+        'https://shopapp-dcc1c.firebaseio.com/products/$productId.json?auth=$token';
     final productIndex = _items.indexWhere(
       (element) => element.id == productId,
     );

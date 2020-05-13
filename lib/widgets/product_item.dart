@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../screens/product_details_screen.dart';
+import '../providers/auth.dart';
 import '../providers/product.dart';
 import '../providers/cart.dart';
 
@@ -10,6 +11,7 @@ class ProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     var product = Provider.of<Product>(context, listen: false);
     var cart = Provider.of<Cart>(context, listen: false);
+    var authData = Provider.of<Auth>(context, listen: false);
     final scaffold = Scaffold.of(context);
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
@@ -36,7 +38,7 @@ class ProductItem extends StatelessWidget {
               ),
               onPressed: () async {
                 try {
-                  await product.toggleIsFavorite();
+                  await product.toggleIsFavorite(authData.getToken);
                 } catch (error) {
                   scaffold.showSnackBar(
                     SnackBar(
