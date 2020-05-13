@@ -26,8 +26,11 @@ class Products extends ChangeNotifier {
     return items.where((item) => item.isFavorite).toList();
   }
 
-  Future<void> getAndSetAllProducts() async {
-    var url = 'https://shopapp-dcc1c.firebaseio.com/products.json?auth=$token';
+  Future<void> getAndSetAllProducts([bool filterByUser = false]) async {
+    final filterParams =
+        filterByUser ? 'orderBy="createdBy"&equalTo="$userId"' : '';
+    var url =
+        'https://shopapp-dcc1c.firebaseio.com/products.json?auth=$token&$filterParams';
 
     try {
       final response = await http.get(url);
@@ -71,6 +74,7 @@ class Products extends ChangeNotifier {
             'description': newProduct.description,
             'price': newProduct.price,
             'imageUrl': newProduct.imageUrl,
+            'createdBy': userId,
           },
         ),
       );

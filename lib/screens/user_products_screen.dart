@@ -10,13 +10,12 @@ class UserProductsScreen extends StatelessWidget {
   static const routeName = '/userProducts';
 
   Future<void> _refreshProducts(BuildContext context) async {
-    await Provider.of<Products>(context).getAndSetAllProducts();
+    await Provider.of<Products>(context, listen: false)
+        .getAndSetAllProducts(true);
   }
 
   @override
   Widget build(BuildContext context) {
-    final productProvider = Provider.of<Products>(context);
-    print(productProvider.items);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your Products'),
@@ -30,24 +29,37 @@ class UserProductsScreen extends StatelessWidget {
         ],
       ),
       drawer: AppDrawer(),
-      body: RefreshIndicator(
-        onRefresh: () => _refreshProducts(context),
-        child: Padding(
-          padding: EdgeInsets.all(20),
-          child: ListView.builder(
-            itemBuilder: (ctx, index) => Column(
-              children: <Widget>[
-                UserProductItem(
-                  productProvider.items[index].id,
-                  productProvider.items[index].title,
-                  productProvider.items[index].imageUrl,
-                ),
-                Divider()
-              ],
-            ),
-            itemCount: productProvider.items.length,
-          ),
-        ),
+      body: FutureBuilder(
+        future: _refreshProducts(context),
+        builder: (context, snapshot) {
+          return RefreshIndicator(
+            onRefresh: () => _refreshProducts(context),
+            child: snapshot.connectionState == ConnectionState.waiting
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : Consumer<Products>(
+                    builder: (ctx, productProvider, _) {
+                      return (Padding(
+                        padding: EdgeInsets.all(20),
+                        child: ListView.builder(
+                          itemBuilder: (ctx, index) => Column(
+                            children: <Widget>[
+                              UserProductItem(
+                                productProvider.items[index].id,
+                                productProvider.items[index].title,
+                                productProvider.items[index].imageUrl,
+                              ),
+                              Divider()
+                            ],
+                          ),
+                          itemCount: productProvider.items.length,
+                        ),
+                      ));
+                    },
+                  ),
+          );
+        },
       ),
     );
   }
